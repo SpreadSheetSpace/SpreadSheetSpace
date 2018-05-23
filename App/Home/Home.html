@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <title></title>
+    <script src="../../Scripts/jquery-1.9.1.js" type="text/javascript"></script> 
+
+    <link href="../../Content/Office.css" rel="stylesheet" type="text/css" />
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
+
+    <!-- To enable offline debugging using a local reference to Office.js, use:                        -->
+    <!-- <script src="../../Scripts/Office/MicrosoftAjax.js" type="text/javascript"></script>  -->
+    <!-- <script src="../../Scripts/Office/1/office.js" type="text/javascript"></script>  -->
+
+    <script src="../SSSObj.js" type="text/javascript"></script>
+    <script src="../SSSSite.js" type="text/javascript"></script>
+
+    <link href="../App.css" rel="stylesheet" type="text/css" />
+    <script src="../App.js" type="text/javascript"></script>
+
+    <link href="Home.css" rel="stylesheet" type="text/css" />
+    <script src="Home.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="content-header">
+        <div class="padding">
+            <h1>SpreadSheetSpace</h1>
+        </div>
+    </div>
+    <div id="content-main">
+        <p></p>
+        <div class="tab">
+            <button class="tablinks active" id="homeTab">Home</button>
+            <button class="tablinks" id="connectTab">Connect</button>
+            <button class="tablinks" id="exposeTab">Expose</button>
+        </div>
+        <div class="padding">
+            <div id="operationProgress">Operation in progress...</div>
+            <div id="homeTabSSS" class="tabcontent">
+                <p><h3>Login</h3></p>
+                <p>Mail:</p>
+                <input id="username" class="login-fields" value="" type="text" />
+                <p>Password:</p>
+                <input id="password" value="" class="login-fields" type="password" />
+                <button id="login" class="login-fields">Login</button>
+                <button id="logout" class="logout-fields">Logout</button>
+
+                <p><a id="a_site" target="_blank" href="https://www.spreadsheetspace.net">Sign up here...</a></p>
+
+                <div id="content-sss">
+                    <p><strong>Views on Workbook</strong></p>
+                    <div id="div-table-view"></div>
+                </div>
+            </div>
+            <div id="connectTabSSS" class="tabcontent">
+                <p><strong>Connect</strong></p>
+                <div id="div-list-view"></div>
+                <button id="refresh-view">Refresh</button>
+            </div>
+            <div id="exposeTabSSS" class="tabcontent">
+                <p><strong>Expose</strong></p>
+                <p><label>Recipients:</label></p>
+                <textarea id="input-recipients" rows="5" cols ="40" style="overflow:auto;" value=""></textarea>
+                <p><label>Description:</label></p>
+                <textarea id="input-description" rows="5" cols ="40" style="overflow:auto;" value=""></textarea>
+                <p></p>
+                <button id="create-view">Create View</button>
+            </div>
+
+            <!--<p><h3>Login</h3></p>
+            <p>Mail:</p>
+            <input id="username" class="login-fields" value="" type="text" />
+            <p>Password:</p>
+            <input id="password" value="" class="login-fields" type="password" />
+            <button id="login" class="login-fields">Login</button>
+            <button id="logout" class="logout-fields">Logout</button>
+
+            <p><a id="a_site" target="_blank" href="https://jarvis.spreadsheetspace.net">Sign up here...</a></p>
+
+            <button id="consoleWeb" class="logout-fields">Console Web</button>
+            <label id="text"></label>
+
+            <div id="content-sss">
+                <p><strong>Connect</strong></p>
+                <div id="div-list-view"></div>
+                <button id="refresh-view">Refresh</button>
+
+                <p><strong>Expose.</strong></p>
+                <label>Recipients:</label>
+                <input id="input-recipients" value="" type="text" />
+                <label>Description:</label>
+                <input id="input-description" value="" type="text" />
+                <button id="create-view">Create View</button>
+
+                <p><strong>Views on Workbook</strong></p>
+                <div id="div-table-view"></div>
+            </div>-->
+        </div>
+    </div>
+</body>
+</html>

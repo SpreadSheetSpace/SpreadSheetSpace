@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<!-- IE Mark of the web -->
+<!-- saved from url=($SERVER_URL_LENGTH$)$SERVER_URL$ -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript">
+        window.onload = function() {
+            document.forms["loginForm"].submit();
+            setTimeout(function() { window.location = "$SERVER_URL$/"; }, 30000);
+        };
+    </script>
+    <style type="text/css">
+        div.center {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        body {
+            font-family: Sans-Serif;
+            font-size: 13pt;
+            padding: 50px 0;
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
+    </style>
+    <title>SpreadSheetSpace</title>
+</head>
+<body>
+    <form id="loginForm" action="$SERVER_URL$" method="post">
+        <input type="hidden" name="action" value="login">
+        <input type="hidden" name="username" value="$USERNAME$">
+        <input type="hidden" name="password" value="$PASSWORD$">
+        <input type="hidden" name="showAddressBook" value="$SHOW_ADDRESS_BOOK$">
+        <input type="checkbox" class="hidden" name="remember" checked>
+        <noscript>
+            <div class="center">
+                <meta id="meta-refresh" http-equiv="refresh" content="2;URL='" $SERVER_URL$/'">
+                <p>Can not login because browser Javascript are not active.</p>
+                <a href="$SERVER_URL$/">Manual access</a>
+            </div>
+        </noscript>
+    </form>
+</body>
+</html>
