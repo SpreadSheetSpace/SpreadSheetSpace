@@ -10,7 +10,7 @@ var listSSSElement;
 var listView;
 var listViewOnExcel;
 
-var sssServer;
+var sssServer = "https://jarvis.spreadsheetspace.net";
 
 //var worker;
 var overView = false;
@@ -24,6 +24,10 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
     Office.initialize = function (reason) {
         $(document).ready(function () {
             app.initialize();
+
+            $("#server").val(sssServer);
+            $("#content-sss").hide();
+
             var u = "";
             var p = "";
             var s = "";
@@ -34,23 +38,24 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
 
             u = getCookie("username");
             p = getCookie("password");
-            s = getCookie("server");
+            //s = getCookie("server");
             u_id = getCookie("username_id");
             //k = getCookie("rsa");
             var logged = false;
 
-            if (u != "" && p != "" && u_id != "" && s != "") {
+            //if (u != "" && p != "" && u_id != "" && s != "") {
+            if (u != "" && p != "" && u_id != "") {
                 logged = true;
             }
             //controllo se mi sono gia' loggato e ho le credenziali salvate
             if (logged) {
                 username = u;
                 password = p;
-                sssServer = s;
+                //sssServer = s;
                 username_id = u_id;
 
                 //faccio il login automatico
-                $("#server").val(sssServer);
+                //$("#server").val(sssServer);
                 $("#username").val(username);
                 $("#password").val(password);
 
@@ -72,7 +77,9 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
                 $('#exposeTab').prop("disabled", true);
 
                 $("#content-sss").hide();
-                $("#a_site").show();
+                $("#login-div").show();
+
+                $("#welcome").text(username);
 
                 $("#operationProgress").hide();
 
@@ -257,7 +264,9 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
                     $('#exposeTab').prop("disabled", false);
 
                     $("#content-sss").show();
-                    $("#a_site").hide();
+                    $("#login-div").hide();
+
+                    $("#welcome").text(username);
 
                     getViews("", -1, "", "", "", "", "");
                     $("#operationProgress").hide();
@@ -282,15 +291,17 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
         listView = [];
 
         //faccio il reset delle caselle di testo
-        $("#server").val("");
-        $("#username").val("");
+        //$("#server").val("");
+        //$("#username").val("");
         $("#password").val("");
 
-        //mostro il link per registrarsi
-        $("#a_site").show();
+        //mostro il div per il login
+        $("#login-div").show();
 
         //nascondo la possibilità di fare le operazioni su sss
         $("#content-sss").hide();
+
+        $("#welcome").text('');
 
         $("#operationProgress").hide();
 
@@ -402,6 +413,12 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
     }
 
     function checkBindingToRemove(local_uuid) {
+        Office.select("bindings#" + local_uuid).removeHandlerAsync(Office.EventType.BindingDataChanged,
+            function (eventArgs) {
+                checkAddRowOrColumn(eventArgs.binding.id);
+            }
+        );
+
         Office.context.document.bindings.releaseByIdAsync(local_uuid, 
             function (asyncResult) {
                 if (asyncResult.status == "failed") {
@@ -505,8 +522,6 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
 
     function tableView() {
         if (listViewOnExcel.length > 0) {
-            //var table = '<table id="tableView">\n<thead>\n<tr>\n<th>Description</th>\n<th>Owner - (Permission)</th>\n<th>Address</th>\n<th>Update</th>\n<th>Refresh</th>\n<th>Unlink</th>\n</tr>\n</thead>\n<tbody>\n';
-            //var table = '<table id="tableView">\n<thead>\n<tr>\n<th>Description</th>\n<th>Owner - (Permission)</th>\n<th>Address</th>\n</tr>\n</thead>\n<tbody>\n';
             var table = '<table id="tableView" style="border-collapse: collapse;">\n<tbody>\n';
             for (var i = 0; i < listViewOnExcel.length; i++) {
                 var listViewOnExcel_i = listViewOnExcel[i];
@@ -515,12 +530,12 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
                 table += '<td align="center">' + listViewOnExcel_i.rangeAddress + '</td></tr>\n';
                 table += '<tr id="tr" class="border_bottom">\n<td align="center">';
                 if (listViewOnExcel_i.permission == "READ") {
-                    table += '<button id="update_' + i + '" disabled>Update</button>' + '</td>\n';
+                    table += '<button type="button" style="cursor: pointer;" id="update_' + i + '" title="Update" disabled><span class="fas fa-share-square"></span></button>' + '</td>\n';
                 } else {
-                    table += '<button id="update_' + i + '">Update</button>' + '</td>\n';
+                    table += '<button type="button" style="cursor: pointer;" id="update_' + i + '" title="Update"><span class="fas fa-share-square"></span></button>' + '</td>\n';
                 }
-                table += '<td align="center">' + '<button id="refresh_' + i + '">Refresh</button>' + '</td>\n';
-                table += '<td align="center">' + '<button id="remove_' + i + '">Unlink</button>' + '</td>\n</tr>\n';
+                table += '<td align="center">' + '<button type="button" style="cursor: pointer;" id="refresh_' + i + '" title="Refresh"><span class="fas fa-sync-alt"></span></button>' + '</td>\n';
+                table += '<td align="center">' + '<button type="button" style="cursor: pointer;" id="remove_' + i + '" title="Unlink"><span class="far fa-times-circle"></span></button>' + '</td>\n</tr>\n';
 
             }
             table += '</tbody>\n</table>';
@@ -562,6 +577,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
                 proceed = false;
             }
         }
+
 
         if (proceed) {
             Office.context.document.getSelectedDataAsync(Office.CoercionType.Table,
@@ -633,44 +649,49 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
             if (resultTable == "failed" || resultTable == undefined) {
                 Office.context.document.getSelectedDataAsync(Office.CoercionType.Matrix,
                      function (result) {
-                         if (result.status === Office.AsyncResultStatus.Succeeded) {
+                         if (resultTable == "failed" || resultTable == undefined) {
+                             if (result.status === Office.AsyncResultStatus.Succeeded) {
 
-                             var value = "";
-                             var data = result.value;
-                             var row = data.length;
-                             var column;
-                             for (var i = 0; i < data.length; i++) {
-                                 var cell = data[i];
+                                 var value = "";
+                                 var data = result.value;
+                                 var row = data.length;
+                                 var column;
+                                 for (var i = 0; i < data.length; i++) {
+                                     var cell = data[i];
 
-                                 column = cell.length;
-                                 for (var j = 0; j < cell.length; j++) {
-                                     value += cell[j];
-                                     if (j != cell.length - 1) {
-                                         value += "\x1F";
+                                     column = cell.length;
+                                     for (var j = 0; j < cell.length; j++) {
+                                         value += cell[j];
+                                         if (j != cell.length - 1) {
+                                             value += "\x1F";
+                                         }
+                                     }
+
+                                     if (i != data.length - 1) {
+                                         value += '\x1E';
                                      }
                                  }
-
-                                 if (i != data.length - 1) {
-                                     value += '\x1E';
+                                 if (resultTable == "failed" || resultTable == undefined) {
+                                     Excel.run(function (ctx) {
+                                         var selectedRange = ctx.workbook.getSelectedRange();
+                                         selectedRange.load('address');
+                                         return ctx.sync().then(function () {
+                                             console.log(selectedRange.address);
+                                             if (resultTable == "failed" || resultTable == undefined) {
+                                                 retrieveViewServer(value, row, column, false, false, "VIEW", selectedRange.address, selectedRange);
+                                             }
+                                         });
+                                     }).catch(function (error) {
+                                         $("#operationProgress").hide();
+                                         console.log("Error: " + error);
+                                     });
                                  }
-                             }
 
-                             Excel.run(function (ctx) {
-                                 var selectedRange = ctx.workbook.getSelectedRange();
-                                 selectedRange.load('address');
-                                 return ctx.sync().then(function () {
-                                     console.log(selectedRange.address);
-                                     retrieveViewServer(value, row, column, false, false, "VIEW", selectedRange.address, selectedRange);
-                                 });
-                             }).catch(function (error) {
+
+                             } else {
                                  $("#operationProgress").hide();
-                                 console.log("Error: " + error);
-                             });
-
-
-                         } else {
-                             $("#operationProgress").hide();
-                             app.showNotification('Error:', result.error.message);
+                                 app.showNotification('Error:', result.error.message);
+                             }
                          }
                      }
                  );
@@ -1675,12 +1696,13 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
                             var rangeAddress = item.rangeAddress.substring(index);
 
                             var range;
-                            if (listViewOnExcel[event.data.index].is_table) {
-                                range = ctx.workbook.tables.add(address + ":" + lastCell.address, has_headers)
+                            /*if (listViewOnExcel[event.data.index].is_table) {
+                                //range = ctx.workbook.tables.add(address + ":" + lastCell.address, has_headers)
+                                range = ctx.workbook.tables.add(rangeAddress, listViewOnExcel[event.data.index].has_headers)
                             } else {
                                 range = ctx.workbook.worksheets.getItem(sheetName).getRange(rangeAddress);
-                            }
-
+                            }*/
+                            range = ctx.workbook.worksheets.getItem(sheetName).getRange(rangeAddress);
                             //var range = ctx.workbook.worksheets.getItem(sheetName).getRange(rangeAddress);
                             range.load('values');
 

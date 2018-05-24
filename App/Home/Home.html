@@ -9,6 +9,8 @@
     <link href="../../Content/Office.css" rel="stylesheet" type="text/css" />
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
     <!-- To enable offline debugging using a local reference to Office.js, use:                        -->
     <!-- <script src="../../Scripts/Office/MicrosoftAjax.js" type="text/javascript"></script>  -->
     <!-- <script src="../../Scripts/Office/1/office.js" type="text/javascript"></script>  -->
@@ -38,19 +40,25 @@
         <div class="padding">
             <div id="operationProgress">Operation in progress...</div>
             <div id="homeTabSSS" class="tabcontent">
-                <p><h3>Login</h3></p>
-                <p>Server (include http or https):</p>
-                <textarea id="server" class="login-fields" value="" rows="1" cols="40" style="overflow:auto;"></textarea>
-                <p>Mail:</p>
-                <textarea id="username" class="login-fields" value="" rows="1" cols="40" style="overflow:auto;"></textarea>
-                <p>Password:</p>
-                <input id="password" value="" class="login-fields" type="password" />
-                <button id="login" class="login-fields">Login</button>
-                <button id="logout" class="logout-fields">Logout</button>
+                <div id="login-div">
+                    <p><h3>Login</h3></p>
+                    <p>Server (include http or https):</p>
+                    <textarea id="server" class="login-fields" value="" rows="1" cols="34" style="overflow:auto; resize:none;" readonly></textarea>
+                    <button type="button" style="cursor: pointer;" id="edit" disabled><span class="fas fa-pencil-alt"></span></button>
+                    <p>Mail:</p>
+                    <textarea id="username" class="login-fields" value="" rows="1" cols="40" style="overflow:auto; resize:none;"></textarea>
+                    <p>Password:</p>
+                    <input id="password" value="" class="login-fields" type="password" />
+                    <button type="button" style="cursor: pointer;" id="login" class="login-fields">Login</button>
+                    <!--<button id="logout" class="logout-fields">Logout</button>-->
 
-                <p><a id="a_site" target="_blank" href="https://www.spreadsheetspace.net">Sign up here...</a></p>
-
+                    <p><a id="a_site" target="_blank" href="https://www.spreadsheetspace.net">Sign up here...</a></p>
+                </div>
                 <div id="content-sss">
+                    <h1>Welcome back,</h1>
+                    <h1 id="welcome"></h1>
+                    <br />
+                    <button type="button" style="cursor: pointer;" id="logout" class="logout-fields">Logout</button>
                     <p><strong>Views on Workbook</strong></p>
                     <div id="div-table-view"></div>
                 </div>
@@ -58,16 +66,16 @@
             <div id="connectTabSSS" class="tabcontent">
                 <p><strong>Connect</strong></p>
                 <div id="div-list-view"></div>
-                <button id="refresh-view">Refresh</button>
+                <button type="button" style="cursor: pointer;" id="refresh-view">Refresh my view list</button>
             </div>
             <div id="exposeTabSSS" class="tabcontent">
                 <p><strong>Expose</strong></p>
                 <p><label>Recipients:</label></p>
-                <textarea id="input-recipients" rows="5" cols ="40" style="overflow:auto;" value=""></textarea>
+                <textarea id="input-recipients" rows="5" cols ="40" style="overflow:auto; resize:none;" value=""></textarea>
                 <p><label>Description:</label></p>
-                <textarea id="input-description" rows="5" cols ="40" style="overflow:auto;" value=""></textarea>
+                <textarea id="input-description" rows="5" cols ="40" style="overflow:auto; resize:none;" value=""></textarea>
                 <p></p>
-                <button id="create-view">Create View</button>
+                <button type="button" style="cursor: pointer;" id="create-view">Create View</button>
             </div>
         </div>
     </div>
