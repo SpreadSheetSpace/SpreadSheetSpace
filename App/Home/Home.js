@@ -10,7 +10,7 @@ var listSSSElement;
 var listView;
 var listViewOnExcel;
 
-var sssServer = "https://www.spreadsheetspace.net";
+var sssServer;
 
 //var worker;
 var overView = false;
@@ -26,6 +26,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
             app.initialize();
             var u = "";
             var p = "";
+            var s = "";
             //var k = "";
             var u_id = "";
 
@@ -33,20 +34,23 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
 
             u = getCookie("username");
             p = getCookie("password");
+            s = getCookie("server");
             u_id = getCookie("username_id");
             //k = getCookie("rsa");
             var logged = false;
 
-            if (u != "" && p != "" && u_id != "") {
+            if (u != "" && p != "" && u_id != "" && s != "") {
                 logged = true;
             }
             //controllo se mi sono gia' loggato e ho le credenziali salvate
             if (logged) {
                 username = u;
                 password = p;
+                sssServer = s;
                 username_id = u_id;
 
                 //faccio il login automatico
+                $("#server").val(sssServer);
                 $("#username").val(username);
                 $("#password").val(password);
 
@@ -222,6 +226,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
     }*/
 
     function login() {
+        sssServer = $("#server").val();
         username = $("#username").val();
         password = $("#password").val();
         addSelectionChangedEventHandler();
@@ -239,9 +244,12 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
                 if (data.statusCode == 200) {
                     app.showNotification('Logged-in');
 
+                    setCookie("server", sssServer, 365);
                     setCookie("username", username, 365);
                     setCookie("password", password, 365);
                     setCookie("username_id", data.userId, 365);
+
+                    username_id = data.userId;
 
                     $('#logout').prop("disabled", false);
 
@@ -274,6 +282,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
         listView = [];
 
         //faccio il reset delle caselle di testo
+        $("#server").val("");
         $("#username").val("");
         $("#password").val("");
 
@@ -290,6 +299,14 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
 
         $('#connectTab').prop("disabled", true);
         $('#exposeTab').prop("disabled", true);
+
+        var viewElement;
+        for (var i = 0; i < listViewOnExcel.length; i++) {
+            viewElement = listViewOnExcel.splice(i, 1);
+            checkBindingToRemove(viewElement[0].local_uuid);
+        }
+
+        tableView();
     }
 
     function consoleWeb() {
@@ -663,6 +680,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
     }
 
     function getViews(rangeAddress, seqNum, fileList, optionalFileList, usersPermission, view_id, view_server) {
+        sssServer = $("#server").val();
         username = $("#username").val();
         password = $("#password").val();
         listView = [];
@@ -833,6 +851,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
     }
 
     function retrieveViewServer(value, row, column, is_table, has_headers, type, selectedRangeAddress, range) {
+        sssServer = $("#server").val();
         username = $("#username").val();
         password = $("#password").val();
 
@@ -862,6 +881,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
     }
 
     function pushView(value, viewserver, row, column, table, header, type, selectedRangeAddress, range) {
+        sssServer = $("#server").val();
         username = $("#username").val();
         password = $("#password").val();
 
@@ -1021,6 +1041,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
     }
 
     function eventCreation(id, description, owner, usersPermission, viewServer, fromAddin, clientType, metadata, encrypted, optionalFileList, fileList, selectedRangeAddress, range) {
+        sssServer = $("#server").val();
         username = $("#username").val();
         password = $("#password").val();
 
@@ -1058,6 +1079,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
 
     function updateView(event) {
         var item = event.data.item;
+        sssServer = $("#server").val();
         username = $("#username").val();
         password = $("#password").val();
 
@@ -1223,6 +1245,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
     }
 
     function eventUpdate(id, viewServer, encrypted, item, index) {
+        sssServer = $("#server").val();
         username = $("#username").val();
         password = $("#password").val();
 
@@ -1258,6 +1281,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
     }
 
     function pullView(element) {
+        sssServer = $("#server").val();
         username = $("#username").val();
         password = $("#password").val();
 
@@ -1513,6 +1537,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
 
     function refreshView(event, seqNum) {
         var item = event.data.item;
+        sssServer = $("#server").val();
         username = $("#username").val();
         password = $("#password").val();
 
