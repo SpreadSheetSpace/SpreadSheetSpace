@@ -10,7 +10,7 @@ var listSSSElement;
 var listView;
 var listViewOnExcel;
 
-var sssServer = "https://jarvis.spreadsheetspace.net";
+var sssServer = "https://www.spreadsheetspace.net";
 
 //var worker;
 var overView = false;
