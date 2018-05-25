@@ -10,7 +10,7 @@ var listSSSElement;
 var listView;
 var listViewOnExcel;
 
-var sssServer = "https://www.spreadsheetspace.net";
+var sssServer = "https://jarvis.spreadsheetspace.net";
 
 //var worker;
 var overView = false;
@@ -80,6 +80,9 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
                 $("#login-div").show();
 
                 $("#welcome").text(username);
+
+                var a_site = document.getElementById('a_site');
+                a_site.href = sssServer;
 
                 $("#operationProgress").hide();
 
@@ -294,6 +297,9 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
         //$("#server").val("");
         //$("#username").val("");
         $("#password").val("");
+
+        var a_site = document.getElementById('a_site');
+        a_site.href = sssServer;
 
         //mostro il div per il login
         $("#login-div").show();
@@ -1622,6 +1628,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
                             }
                         }*/
 
+                        var isEncrypt = false;
                         for (var i = 0; i < fileList.length; i++) {
                             var file = fileList[i];
 
@@ -1634,12 +1641,12 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
                             var excelData;
                             if (parsedDecodedData.Encrypt == false) {
                                 excelData = window.atob(parsedDecodedData.data);
-
                             } else {
-
+                                
                             }
+                            isEncrypt = parsedDecodedData.Encrypt;
 
-                            if (type == "FULL") {
+                            if (type == "FULL" && !isEncrypt) {
                                 var rows = excelData.split("\u001e");
 
                                 if (rowNum == -1) {
@@ -1690,36 +1697,41 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
                             }*/
                         }
 
-                        Excel.run(function (ctx) {
-                            var index = item.rangeAddress.indexOf("!") + 1;
-                            var sheetName = item.rangeAddress.substring(0, index - 1);
-                            var rangeAddress = item.rangeAddress.substring(index);
+                        if (!isEncrypt) {
+                            Excel.run(function (ctx) {
+                                var index = item.rangeAddress.indexOf("!") + 1;
+                                var sheetName = item.rangeAddress.substring(0, index - 1);
+                                var rangeAddress = item.rangeAddress.substring(index);
 
-                            var range;
-                            /*if (listViewOnExcel[event.data.index].is_table) {
-                                //range = ctx.workbook.tables.add(address + ":" + lastCell.address, has_headers)
-                                range = ctx.workbook.tables.add(rangeAddress, listViewOnExcel[event.data.index].has_headers)
-                            } else {
+                                var range;
+                                /*if (listViewOnExcel[event.data.index].is_table) {
+                                    //range = ctx.workbook.tables.add(address + ":" + lastCell.address, has_headers)
+                                    range = ctx.workbook.tables.add(rangeAddress, listViewOnExcel[event.data.index].has_headers)
+                                } else {
+                                    range = ctx.workbook.worksheets.getItem(sheetName).getRange(rangeAddress);
+                                }*/
                                 range = ctx.workbook.worksheets.getItem(sheetName).getRange(rangeAddress);
-                            }*/
-                            range = ctx.workbook.worksheets.getItem(sheetName).getRange(rangeAddress);
-                            //var range = ctx.workbook.worksheets.getItem(sheetName).getRange(rangeAddress);
-                            range.load('values');
+                                //var range = ctx.workbook.worksheets.getItem(sheetName).getRange(rangeAddress);
+                                range.load('values');
 
-                            return ctx.sync().then(function () {
-                                range.values = value;
-                                listViewOnExcel[event.data.index].seqNum = seqNum;
+                                return ctx.sync().then(function () {
+                                    range.values = value;
+                                    listViewOnExcel[event.data.index].seqNum = seqNum;
 
-                                app.showNotification("Refresh of view completed");
-                                $("#operationProgress").hide();
+                                    app.showNotification("Refresh of view completed");
+                                    $("#operationProgress").hide();
+                                }).catch(function (error) {
+                                    app.showNotification('Error on refreshView (1)');
+                                    $("#operationProgress").hide();
+                                });
                             }).catch(function (error) {
-                                app.showNotification('Error on refreshView (1)');
+                                app.showNotification('Error on refreshView (2)');
                                 $("#operationProgress").hide();
                             });
-                        }).catch(function (error) {
-                            app.showNotification('Error on refreshView (2)');
+                        } else {
+                            app.showNotification('The view is encrypted now, you can\'t refresh it anymore');
                             $("#operationProgress").hide();
-                        });
+                        }
 
                     } else {
                         app.showNotification('Error on refreshView (3)');
