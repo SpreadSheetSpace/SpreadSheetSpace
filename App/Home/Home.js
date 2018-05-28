@@ -272,6 +272,13 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
                     $("#welcome").text(username);
 
                     getViews("", -1, "", "", "", "", "");
+
+                    var listViewOnExcelSettings = Office.context.document.settings.get("view-settings");
+                    if (listViewOnExcelSettings != null) {
+                        listViewOnExcel = JSON.parse(listViewOnExcelSettings);
+                        tableView();
+                    }
+                    
                     $("#operationProgress").hide();
                 } else {
                     app.showNotification('Error on login (1)');
@@ -510,12 +517,12 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
             category: category,
             cols: cols,
             rows: rows,
-            fileList: fileList,
-            optionalFileList: optionalFileList,
+            /*fileList: fileList,
+            optionalFileList: optionalFileList,*/
             is_table: is_table,
             excelType: excelType,
             has_headers: has_headers,
-            usersPermission: usersPermission,
+            //usersPermission: usersPermission,
             rangeAddress: rangeAddress
         });
 
@@ -557,6 +564,10 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
             var table = "";
             document.getElementById("div-table-view").innerHTML = table;
         }
+
+        Office.context.document.settings.remove("view-settings");
+        Office.context.document.settings.set("view-settings", JSON.stringify(listViewOnExcel));
+        Office.context.document.settings.saveAsync();
     }
     
     function createView() {
