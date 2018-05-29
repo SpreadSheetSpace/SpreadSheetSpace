@@ -409,17 +409,6 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
         }
         Excel.run(function (ctx) {
             var binding = ctx.workbook.bindings.getItem(local_uuid);
-
-            if (Office.context.requirements.isSetSupported("ExcelApi", 1.2)) {
-                var sheet = ctx.workbook.worksheets.getItem(local_uuid);
-
-                if (element.is_table) {
-                    //binding.getTable().getRange().format.autofitColumns();
-                    //binding.getTable().getRange().format.autofitRows();
-                    sheet.getUsedRange().format.autofitColumns();
-                    sheet.getUsedRange().format.autofitRows();
-                }
-            }
             var range = binding.getRange();
             range.load('address');
 
