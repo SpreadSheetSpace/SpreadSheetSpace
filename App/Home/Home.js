@@ -409,6 +409,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
         }
         Excel.run(function (ctx) {
             var binding = ctx.workbook.bindings.getItem(local_uuid);
+
             var range = binding.getRange();
             range.load('address');
 
@@ -522,7 +523,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
             is_table: is_table,
             excelType: excelType,
             has_headers: has_headers,
-            //usersPermission: usersPermission,
+            usersPermission: usersPermission,
             rangeAddress: rangeAddress
         });
 
