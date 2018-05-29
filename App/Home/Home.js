@@ -541,7 +541,7 @@ var coeff, d, dmp1, dmq1, e, n, p, q;
         
         tableView();
 
-        addProtection(rangeAddress, permissionUser);
+        //addProtection(rangeAddress, permissionUser);
     }
 
     function tableView() {
